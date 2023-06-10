@@ -15,7 +15,7 @@ public abstract class Controller<T> {
 
     public Controller(Service<T> service) {
         this.service = service;
-        System.out.println("Controller created");
+        log.info("Controller created");
     }
 
     @PostMapping()

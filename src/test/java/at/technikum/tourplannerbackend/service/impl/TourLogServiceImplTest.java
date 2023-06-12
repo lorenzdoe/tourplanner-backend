@@ -12,7 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/*
+    * INTEGRATION TEST
+    * Tests service against database
+    * requires database to be running
+ */
 @SpringBootTest
 class TourLogServiceImplTest {
 
@@ -43,8 +47,6 @@ class TourLogServiceImplTest {
                 .build();
 
         // Act
-        //tourLog.setTour(controlTour);
-        //tourLog1.setTour(controlTour);
         tourLogService.addNew(tourLog);
         tourLogService.addNew(tourLog1);
         List<TourLog> tourLogs = tourLogService.findByTourId(controlTour.getId());
@@ -53,6 +55,9 @@ class TourLogServiceImplTest {
         assertNotNull(controlTour);
         assertNotNull(tourLogs);
         assertEquals(2, tourLogs.size());
+
+        // clean up
+        tourService.delete(controlTour);
     }
 
     @Test
@@ -78,5 +83,8 @@ class TourLogServiceImplTest {
         assertNotNull(find);
         assertEquals(tourLog.getComment(), find.getComment());
         assertNull(notFound);
+
+        // clean up
+        tourService.delete(controlTour);
     }
 }

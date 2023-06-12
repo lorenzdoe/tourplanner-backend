@@ -4,24 +4,30 @@ import at.technikum.tourplannerbackend.model.Tour;
 import at.technikum.tourplannerbackend.model.TourLog;
 import at.technikum.tourplannerbackend.persistance.entities.TourEntity;
 import at.technikum.tourplannerbackend.persistance.entities.TourLogEntity;
+import at.technikum.tourplannerbackend.persistance.repositories.TourRepository;
 import at.technikum.tourplannerbackend.service.TourService;
 import at.technikum.tourplannerbackend.utils.Difficulty;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class TourLogMapperTest {
 
     @Autowired
     private TourLogMapper tourLogMapper;
 
-    @Autowired
-    private TourService tourService;
+    @MockBean
+    private TourRepository tourRepository;
 
     @Test
     void tourLogFromEntityTest() {
@@ -53,7 +59,7 @@ class TourLogMapperTest {
     @Test
     void tourLogToEntityTest() {
         // Arrange
-        Tour tour = tourService.addNew(Tour.builder().name("myTour").build());
+        TourEntity tourEntity = TourEntity.builder().id(1L).name("hello world").build();
         TourLog tourLog = TourLog.builder()
                 .id(7L)
                 .rating(19)
@@ -61,8 +67,9 @@ class TourLogMapperTest {
                 .difficulty(Difficulty.EASY)
                 .dateTime(new Date(333))
                 .comment("testcase")
-                .TourId(tour.getId())
+                .TourId(tourEntity.getId())
                 .build();
+        when(tourRepository.findById(tourEntity.getId())).thenReturn(java.util.Optional.of(tourEntity));
 
         // Act
         TourLogEntity tourLogEntity = tourLogMapper.toEntity(tourLog);

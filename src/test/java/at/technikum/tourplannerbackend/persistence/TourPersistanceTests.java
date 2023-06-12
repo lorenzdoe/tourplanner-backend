@@ -32,6 +32,9 @@ public class TourPersistanceTests {
 
         // AssertTrue
         assertTrue(tourRepository.findById(tourEntity.getId()).isPresent());
+
+        // clean up
+        tourRepository.delete(tourEntity);
     }
 
     @Test
@@ -50,7 +53,7 @@ public class TourPersistanceTests {
     }
 
     @Test
-    public void saveTourContainingTourLogs() {
+    public void saveTourContainingTourLogs_deleteTour_shouldDeleteTourLogs() {
         // Arrange
         TourEntity tourEntity = TourEntity.builder()
                 .name("TourTest")
@@ -69,5 +72,12 @@ public class TourPersistanceTests {
         assertEquals(tourEntity,control);
         assertEquals(logEntities.toString(),tourLogs.toString()); // compare strings because pointer are different
         System.out.println(control.getTourLogs());
+
+        // clean up
+        tourRepository.delete(tourEntity);
+
+        // Assert
+        assertFalse(tourRepository.findById(tourEntity.getId()).isPresent());
+        assertTrue(tourLogRepository.findByTourId(tourEntity.getId()).isEmpty());
     }
 }

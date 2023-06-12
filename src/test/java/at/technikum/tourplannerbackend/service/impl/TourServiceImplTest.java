@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
+    * INTEGRATION TEST
     * Tests service against database
     * requires database to be running
  */
@@ -38,6 +39,9 @@ class TourServiceImplTest {
 
         // Assert
         assertNotNull(control);
+
+        // clean up
+        tourService.delete(control);
     }
 
     @Test
@@ -62,6 +66,9 @@ class TourServiceImplTest {
         // Assert
         assertEquals("Changed", updated.getName());
         assertEquals(control.getId(), updated.getId());
+
+        // clean up
+        tourService.delete(control);
     }
 
     @Test
